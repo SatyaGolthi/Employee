@@ -1,0 +1,20 @@
+
+//service
+public Employee updateEmployee(Employee employee, int empId) {
+		Employee beforeUpdate = (Employee) employeeRepository.getOne(empId);
+		beforeUpdate.setEmpFirstName(employee.getEmpFirstName());
+		beforeUpdate.setEmpAddress(employee.getEmpAddress());
+		return employeeRepository.saveAndFlush(beforeUpdate);
+	}
+	
+	//repo
+	@Transactional
+@Modifying
+@Query("UPDATE Employee  a SET a.empAddress=:empAddress, a.empFirstName=:empFirstName where a.empId =:empId")
+int updateEmployee(@Param(value="empId") int empId,@Param(value="empAddress") String empAddress, @Param(value="empFirstName") String empFirstName ); 
+
+}
+@RequestMapping(value = "/employee/{empId}", method = RequestMethod.PUT)
+	public Employee updateEmployee(@RequestBody Employee employee,@PathVariable int empId) {
+		return eService.updateEmployee(employee,empId);
+	}
